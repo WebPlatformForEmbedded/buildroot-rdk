@@ -49,13 +49,25 @@ __EOF__
 
 done
 
-rm -rf "${GENIMAGE_TMP}"
-
-genimage                           \
-	--rootpath "${TARGET_DIR}"     \
-	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${BINARIES_DIR}"  \
-	--outputpath "${BINARIES_DIR}" \
-	--config "${GENIMAGE_CFG}"
+if grep -qE '^BR2_TARGET_ROOTFS_EXT2_4=y' "${BR2_CONFIG}"; then
+	rm -rf "${GENIMAGE_TMP}"
+	genimage                           \
+		--rootpath "${TARGET_DIR}"     \
+		--tmppath "${GENIMAGE_TMP}"    \
+		--inputpath "${BINARIES_DIR}"  \
+		--outputpath "${BINARIES_DIR}" \
+		--config "${GENIMAGE_CFG}"
+elif grep -qE '^BR2_TARGET_ROOTFS_CPIO=y' "${BR2_CONFIG}"; then
+	if ! grep -qE '^BR2_TARGET_ROOTFS_INITRAMFS=y' "${BR2_CONFIG}"; then
+		sed -i 's/^#initramfs/initramfs/' "${BINARIES_DIR}/rpi-firmware/config.txt"
+	else
+		sed -i 's/^initramfs/#initramfs/' "${BINARIES_DIR}/rpi-firmware/config.txt"
+	fi
+	if grep -qE '^BR2_TARGET_ROOTFS_CPIO_XZ=y' "${BR2_CONFIG}"; then
+		sed -i 's/cpio.*/cpio.xz/' "${BINARIES_DIR}/rpi-firmware/config.txt"
+	elif grep -qE '^BR2_TARGET_ROOTFS_CPIO_LZ4=y' "${BR2_CONFIG}"; then
+		sed -i 's/cpio.*/cpio.lz4/' "${BINARIES_DIR}/rpi-firmware/config.txt"
+	fi
+fi
 
 exit $?
