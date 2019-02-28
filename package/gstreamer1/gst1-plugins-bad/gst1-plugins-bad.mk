@@ -664,6 +664,13 @@ else
 GST1_PLUGINS_BAD_CONF_OPTS += --disable-sbc
 endif
 
+ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BAD_PLUGIN_SMOOTHSTREAMING),y)
+GST1_PLUGINS_BAD_CONF_OPTS += --enable-smoothstreaming
+GST1_PLUGINS_BAD_DEPENDENCIES += libxml2
+else
+GST1_PLUGINS_BAD_CONF_OPTS += --disable-smoothstreaming
+endif
+
 ifeq ($(BR2_PACKAGE_GST1_PLUGINS_BAD_PLUGIN_SHM),y)
 GST1_PLUGINS_BAD_CONF_OPTS += --enable-shm
 else
