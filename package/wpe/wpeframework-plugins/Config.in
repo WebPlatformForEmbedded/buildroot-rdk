@@ -1,0 +1,465 @@
+config BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR
+    select BR2_PACKAGE_WPEFRAMEWORK_VIRTUALINPUT
+    bool "Compositor"
+    help
+       WPE Platform Compositor plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_AUTOSTART
+    bool "Start Automatically"
+    default y
+    help
+      Select this to start the plugin automatically when starting WPEFramework
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_OUTOFPROCESS
+    bool "Out of process"
+    help
+      Select this to run this plugin in its own process.
+
+choice
+    prompt "resolution"
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_RESOLUTION_720P
+    bool "720p"
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_RESOLUTION_1080P
+    bool "1080p"
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_RESOLUTION_2160P
+    bool "2160p"
+
+endchoice
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_NEXUS_SERVER_EXTERNAL
+    bool "Nexus server external"
+    depends on BR2_PACKAGE_HAS_NEXUS  && !BR2_PACKAGE_WAYLAND
+    default n
+    help
+      Use an external nxserver with the compositor.
+
+if BR2_PACKAGE_HAS_NEXUS && !BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_NEXUS_SERVER_EXTERNAL
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_IRMODE
+    string "IR mode"
+    default "16"
+    help
+      Sets the IR Mode to be used with IR Nexus. Every remote has a different mode and key mapping.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_BOXMODE
+    string "Memory Box Mode"
+    help
+      Memory box mode, you can find details from release notes per platform
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_ALLOW_UNAUTHENTICATED_CLIENTS
+    bool "Allow unauthenticated clients"
+    default n
+    help
+      Allow unauthenticated clients on the nxserver.
+
+choice
+    prompt "svp type"
+    default BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_SVP_ALL if BR2_PACKAGE_BCM_REFSW_SAGE
+    default BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_SVP_NONE if !BR2_PACKAGE_BCM_REFSW_SAGE
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_SVP_NONE
+    bool "none"
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_SVP_VIDEO
+    depends on BR2_PACKAGE_BCM_REFSW_SAGE
+    bool "video"
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_SVP_ALL
+    depends on BR2_PACKAGE_BCM_REFSW_SAGE
+    bool "all"
+
+endchoice
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    bool "Memories"
+    default n
+    help
+      Allow memory heap updates
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_GFX
+    string "Graphics Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of Graphics memory. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_GFX2
+    string "Secondary Graphics Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of Secondary Graphics memory. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_RESTRICTED
+    string "Compressed Restricted Region Memory (Video Secure)"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of Compressed Restricted Region Memory (Video Secure) memory. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_MAIN
+    string "Main Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of main memory. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_EXPORT
+    string "Export Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of Export Region memory. The ammount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_SECUREGFX
+    string "Secure Graphics Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    help
+      Allow update of Secure Graphics memory. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORY_CLIENT
+    string "Client Memory"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_MEMORIES
+    depends on BR2_PACKAGE_BCM_REFSW_SAGE
+    help
+      Allow update of Client memory. SAGE must be told which heap the client's will be using. The amount of memory in MB to be configured for.
+
+config BR2_PACKAGE_WPEFRAMEWORK_COMPOSITOR_HARDWAREREADY
+    string "Manual overrule of the time it takes to initialisize all hardware (s)"
+    default 0
+
+endif
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_DEVICEINFO
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "DeviceInfo"
+    default y
+    help
+      DeviceInfo Plugin
+
+config BR2_PACKAGE_WPEFRAMEWORK_DHCPSERVER
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "DHCPServer"
+    help
+      IPv4 DHCP server functionality. Distribute IPv4 addresses throughout the
+      network.
+
+config BR2_PACKAGE_WPEFRAMEWORK_DICTIONARY
+	select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+	bool "Dictionary"
+	help
+	  Dictionary Plugin.
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_LOCATIONSYNC
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "LocationSync"
+    help
+      LocationSync Plugin
+      WPE Platform Dictionary plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_LOCATIONSYNC
+
+config BR2_PACKAGE_WPEFRAMEWORK_LOCATIONSYNC_URI
+    string "location URI"
+    default "http://ip-api.com/json"
+
+endif
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_MONITOR
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "Monitor"
+    help
+      Monitor Plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_MONITOR
+
+config BR2_PACKAGE_WPEFRAMEWORK_MONITOR_WEBKIT
+    depends on BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+    string "webkit-limit"
+    default "614400"
+
+config BR2_PACKAGE_WPEFRAMEWORK_MONITOR_YOUTUBE
+    depends on BR2_PACKAGE_WPEFRAMEWORK_YOUTUBE
+    string "youtube-limit"
+    default "614400"
+
+config BR2_PACKAGE_WPEFRAMEWORK_MONITOR_APPS
+    depends on BR2_PACKAGE_WPEFRAMEWORK_APPS
+    string "apps-limit"
+    default "614400"
+
+config BR2_PACKAGE_WPEFRAMEWORK_MONITOR_UX
+    depends on BR2_PACKAGE_WPEFRAMEWORK_UX
+    string "ux-limit"
+    default "614400"
+
+config BR2_PACKAGE_WPEFRAMEWORK_MONITOR_NETFLIX
+    depends on BR2_PACKAGE_WPEFRAMEWORK_NETFLIX
+    string "netflix-limit"
+    default "409600"
+
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_NETWORKCONTROL
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "NetworkControl"
+    help
+      Control the IP adressing of the interfaces in the system from
+      WPEFramework (static IPv4/IPv6 or dhcp IPv4)
+
+config BR2_PACKAGE_WPEFRAMEWORK_BLUETOOTH
+    bool "Bluetooth"
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    select BR2_PACKAGE_BLUEZ5_UTILS
+    default n
+    help
+      A Bluetooth plugin to interact with Bluetooth devices.
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "RemoteControl"
+    help
+      RemoteControl Plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_IR
+    bool "IR (Infrared)"
+    help
+      Select devices which are based on Infrared (IR) technology
+
+if BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_IR
+
+config BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_IR_CODEMASK
+    string "IR code mask"
+    depends on BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_IR
+    help
+      Sets a key code mask if the device generates same code based on trigger bit
+
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_DEVINPUT
+    bool "devinput (linux input system)"
+    depends on BR2_PACKAGE_HAS_UDEV
+    help
+      Select devices which are annunced in the linux operating system under /dev/input/ as eventX
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_CUSTOM_VIRTUAL
+    bool "Custom virtual device/mapping"
+    default n
+    help
+      Select custom virtual device/mapping
+
+if BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_CUSTOM_VIRTUAL
+
+config BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_CUSTOM_VIRTUAL_NAME
+    string "Custom virtual name"
+    help
+      Add custom virtual name
+
+config BR2_PACKAGE_WPEFRAMEWORK_REMOTECONTROL_CUSTOM_VIRTUAL_MAP_FILE
+    string "Custom virtual map file"
+    help
+      Add custom virtual map file
+
+endif
+
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_SNAPSHOT
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "Snapshot"
+    help
+      Snapshot Plugin
+
+config BR2_PACKAGE_WPEFRAMEWORK_TIMESYNC
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "TimeSync"
+    help
+      TimeSync Plugin
+
+config BR2_PACKAGE_WPEFRAMEWORK_TRACECONTROL
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "TraceControl"
+    help
+      TraceControl Plugin
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "WebKitBrowser"
+    depends on BR2_PACKAGE_WPEWEBKIT
+    help
+      WebKitBrowser Plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_AUTOSTART
+    bool "autostart"
+    default y
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_STARTURL
+    string "start-url"
+    default "about:blank"
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_USERAGENT
+    string "useragent"
+    default "Mozilla/5.0 (Macintosh, Intel Mac OS X 10_11_4) AppleWebKit/602.1.28+ (KHTML, like Gecko) Version/9.1 Safari/601.5.17"
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_MEMORYPROFILE
+    string "memory-profile"
+    default "128m"
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_MEMORYPRESSURE
+    string "memory-pressure"
+    default "databaseprocess:50m,networkprocess:100m,webprocess:300m,rpcprocess:50m"
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_MEDIADISKCACHE
+    bool "media-disk-cache"
+    default n
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_DISKCACHE
+    string "disk-cache"
+    default "0"
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_XHRCACHE
+    bool "xhr-cache"
+    default false
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_TRANSPARENT
+    bool "transparent"
+    default false
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_WINDOWCLOSE
+       bool "windowclose"
+       default false
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_DISABLE_WEBGL
+       bool "disablewebgl"
+       default false
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_USER
+    string "user"
+    default ""
+    help
+        run WebKitBrowser as this user, leave empty to use the same as 
+        WPEframework
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_GROUP
+    string "group"
+    default ""
+    help
+        run WebKitBrowser as this group, leave empty to use the same as 
+        WPEframework
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_YOUTUBE
+    depends on BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+    bool "youtube"
+    help
+      A wrapper around the youtube app to start it as a
+      wpeframework plugin.
+
+if BR2_PACKAGE_WPEFRAMEWORK_YOUTUBE
+
+config BR2_PACKAGE_WPEFRAMEWORK_YOUTUBE_USERAGENT
+    string "useragent"
+    default "Mozilla/5.0 (Macintosh, Intel Mac OS X 10_11_4) AppleWebKit/602.1.28+ (KHTML, like Gecko) Version/9.1 Safari/601.5.17"
+
+endif
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_APPS
+    depends on BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+    bool "apps"
+    help
+      A webkit instance for apps to start it as a
+      wpeframework plugin.
+
+if BR2_PACKAGE_WPEFRAMEWORK_APPS
+
+config BR2_PACKAGE_WPEFRAMEWORK_APPS_AUTOSTART
+    bool "autostart"
+
+config BR2_PACKAGE_WPEFRAMEWORK_APPS_USERAGENT
+    string "useragent"
+    default ""
+
+endif
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_UX
+    depends on BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
+    bool "ux"
+    help
+      A WPEUIFramework non-compositing WebGL enabled tab.
+
+if BR2_PACKAGE_WPEFRAMEWORK_UX
+
+config BR2_PACKAGE_WPEFRAMEWORK_UX_AUTOSTART
+    bool "autostart"
+
+config BR2_PACKAGE_WPEFRAMEWORK_UX_USERAGENT
+    string "useragent"
+    default ""
+
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_CLIENTIDENTIFIER
+    string "clientidentifier"
+    default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_THREADEDPAINTING
+    string "threaded-painting"
+    default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_LOCALSTORAGE
+	string "HTML5 local storage path"
+	default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_COOKIESTORAGE
+	string "Cookie storage path"
+	default ""
+
+endif
+
+comment "WebKitBrowser depends on WPE WebKit to be selected"
+    depends on !BR2_PACKAGE_WPEWEBKIT
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBPROXY
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "WebProxy"
+    help
+       WebProxy Plugin
+
+menuconfig BR2_PACKAGE_WPEFRAMEWORK_WEBSERVER
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "WebServer"
+    help
+      WebServer Plugin
+
+if BR2_PACKAGE_WPEFRAMEWORK_WEBSERVER
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBSERVER_PATH
+    string "path"
+    default "/www"
+
+endif
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBSHELL
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    bool "WebShell"
+    help
+      WebShell Plugin
+
+config BR2_PACKAGE_WPEFRAMEWORK_WIFICONTROL
+    select BR2_PACKAGE_WPEFRAMEWORK_PLUGINS
+    select BR2_PACKAGE_WPA_SUPPLICANT
+    select BR2_PACKAGE_WPEFRAMEWORK_NETWORKCONTROL
+    bool "WifiControl"
+    help
+      WifiControl Plugin for Wifi access, linked to Network Control
+
+
+
+comment "External plugins below"
