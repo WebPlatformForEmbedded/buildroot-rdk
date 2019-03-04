@@ -1,10 +1,10 @@
-diff -Naur a/configure b/configure
---- a/configure	2018-09-28 06:34:32.966936000 +0000
-+++ b/configure	2018-09-28 06:33:25.802936000 +0000
-@@ -13326,134 +13326,6 @@
+diff -rupN a/configure b/configure
+--- a/configure	2019-03-04 03:08:06.696674999 +0000
++++ b/configure	2019-03-04 02:54:13.328674999 +0000
+@@ -13355,134 +13355,6 @@ fi
  fi
-
-
+ 
+ 
 -pkg_failed=no
 -{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for DBUS" >&5
 -$as_echo_n "checking for DBUS... " >&6; }
@@ -133,59 +133,51 @@ diff -Naur a/configure b/configure
 -$as_echo "${path_dbussessionbusdir}" >&6; }
 -fi
 -DBUS_SESSIONBUSDIR=${path_dbussessionbusdir}
-
-
+ 
+ 
  # Check whether --enable-backtrace was given.
-diff -Naur a/Makefile.in b/Makefile.in
---- a/Makefile.in	2018-09-28 06:32:15.998936000 +0000
-+++ b/Makefile.in	2018-09-28 06:32:24.110936000 +0000
-@@ -83,11 +83,10 @@
+diff -rupN a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2019-03-04 03:08:06.676674999 +0000
++++ b/Makefile.in	2019-03-04 02:54:13.316674999 +0000
+@@ -83,12 +83,11 @@ PRE_UNINSTALL = :
  POST_UNINSTALL = :
  build_triplet = @build@
  host_triplet = @host@
 -bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) $(am__EXEEXT_3) \
--	$(am__EXEEXT_4)
--noinst_PROGRAMS = $(am__EXEEXT_5) $(am__EXEEXT_6) $(am__EXEEXT_7) \
-+bin_PROGRAMS = $(am__EXEEXT_4)
-+#noinst_PROGRAMS = $(am__EXEEXT_5) $(am__EXEEXT_6) $(am__EXEEXT_7) \
-	$(am__EXEEXT_8) $(am__EXEEXT_9) $(am__EXEEXT_13)
--libexec_PROGRAMS = src/bluetoothd$(EXEEXT) obexd/src/obexd$(EXEEXT)
-+#libexec_PROGRAMS = src/bluetoothd$(EXEEXT) obexd/src/obexd$(EXEEXT)
+-	$(am__EXEEXT_4) $(am__EXEEXT_5)
+-noinst_PROGRAMS = $(am__EXEEXT_8) $(am__EXEEXT_9) $(am__EXEEXT_10) \
++bin_PROGRAMS = $(am__EXEEXT_5)
++#noinst_PROGRAMS = $(am__EXEEXT_8) $(am__EXEEXT_9) $(am__EXEEXT_10) \
+ 	$(am__EXEEXT_11) $(am__EXEEXT_12) $(am__EXEEXT_13) \
+ 	$(am__EXEEXT_17)
+-libexec_PROGRAMS = src/bluetoothd$(EXEEXT) $(am__EXEEXT_6) \
++#libexec_PROGRAMS = src/bluetoothd$(EXEEXT) $(am__EXEEXT_6) \
+ 	$(am__EXEEXT_7)
  @LIBRARY_TRUE@am__append_1 = $(lib_headers)
  @LIBRARY_TRUE@am__append_2 = lib/libbluetooth.la
- DIST_COMMON = $(srcdir)/Makefile.plugins $(srcdir)/Makefile.tools \
-@@ -1798,7 +1797,7 @@
-	$(systemduserunit_DATA)
- am__include_HEADERS_DIST = lib/bluetooth.h lib/hci.h lib/hci_lib.h \
-	lib/sco.h lib/l2cap.h lib/sdp.h lib/sdp_lib.h lib/rfcomm.h \
--	lib/bnep.h lib/cmtp.h lib/hidp.h
-+	lib/bnep.h lib/cmtp.h lib/hidp.h lib/mgmt.h
- HEADERS = $(include_HEADERS)
- am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
-	$(LISP)config.h.in
-@@ -2167,9 +2166,7 @@
+@@ -2292,9 +2291,7 @@ top_srcdir = @top_srcdir@
  AM_MAKEFLAGS = --no-print-directory
  lib_LTLIBRARIES = $(am__append_2)
- noinst_LIBRARIES = $(am__append_7)
+ noinst_LIBRARIES = 
 -noinst_LTLIBRARIES = lib/libbluetooth-internal.la \
 -	gdbus/libgdbus-internal.la src/libshared-glib.la \
--	src/libshared-mainloop.la
-+noinst_LTLIBRARIES = lib/libbluetooth-internal.la
- dist_man_MANS = $(am__append_31) $(am__append_34) $(am__append_37)
- dist_noinst_MANS = $(am__append_53)
+-	src/libshared-mainloop.la $(am__append_4)
++noinst_LTLIBRARIES = lib/libbluetooth-internal.la 
+ dist_man_MANS = $(am__append_35) $(am__append_38) $(am__append_41)
+ dist_noinst_MANS = $(am__append_57)
  CLEANFILES = $(builtin_files) src/bluetooth.service \
-@@ -2255,12 +2252,12 @@
+@@ -2380,12 +2377,12 @@ AM_LDFLAGS = $(MISC_LDFLAGS)
  plugindir = $(libdir)/bluetooth/plugins
  @MAINTAINER_MODE_FALSE@build_plugindir = $(plugindir)
  @MAINTAINER_MODE_TRUE@build_plugindir = $(abs_top_srcdir)/plugins/.libs
--plugin_LTLIBRARIES = $(am__append_24) $(am__append_25) \
-+#plugin_LTLIBRARIES = $(am__append_24) $(am__append_25) \
-	$(am__append_47)
+-plugin_LTLIBRARIES = $(am__append_25) $(am__append_26) \
++#plugin_LTLIBRARIES = $(am__append_25) $(am__append_26) \
+ 	$(am__append_51)
  lib_sources = lib/bluetooth.c lib/hci.c lib/sdp.c
  lib_headers = lib/bluetooth.h lib/hci.h lib/hci_lib.h \
-		lib/sco.h lib/l2cap.h lib/sdp.h lib/sdp_lib.h \
+ 		lib/sco.h lib/l2cap.h lib/sdp.h lib/sdp_lib.h \
 -		lib/rfcomm.h lib/bnep.h lib/cmtp.h lib/hidp.h
 +		lib/rfcomm.h lib/bnep.h lib/cmtp.h lib/hidp.h lib/mgmt.h
-
+ 
  extra_headers = lib/mgmt.h lib/uuid.h lib/a2mp.h lib/amp.h
  extra_sources = lib/uuid.c
