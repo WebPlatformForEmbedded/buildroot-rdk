@@ -1,0 +1,56 @@
+diff -urN a/WebKitBrowser/CMakeLists.txt b/WebKitBrowser/CMakeLists.txt
+--- a/WebKitBrowser/CMakeLists.txt
++++ b/WebKitBrowser/CMakeLists.txt
+@@ -31,6 +31,7 @@
+ find_package(${NAMESPACE}Plugins REQUIRED)
+ find_package(GLIB REQUIRED)
+ find_package(WPEWebKit REQUIRED)
++pkg_check_modules(WPEBackend wpe-0.2)
+ 
+ add_library(${MODULE_NAME} SHARED  
+     Module.cpp
+@@ -48,10 +49,12 @@
+     PRIVATE 
+         ${NAMESPACE}Plugins::${NAMESPACE}Plugins
+         ${GLIB_LIBRARIES}
++        ${WPEBackend_LIBRARIES}
+         ${WPE_WEBKIT_LIBRARIES})
+ 
+ target_include_directories(${MODULE_NAME} 
+     PRIVATE 
++        ${WPEBackend_INCLUDE_DIRS}
+         ${WPE_WEBKIT_INCLUDE_DIRS}
+         ${WPE_WEBKIT_INCLUDE_DIRS}/WPE
+         ${GLIB_INCLUDE_DIRS})
+diff -urN a/WebKitBrowser/WebKitImplementation.cpp b/WebKitBrowser/WebKitImplementation.cpp
+--- a/WebKitBrowser/WebKitImplementation.cpp
++++ b/WebKitBrowser/WebKitImplementation.cpp
+@@ -13,6 +13,7 @@
+ #include <WPE/WebKit/WKNotificationManager.h>
+ #include <WPE/WebKit/WKUserMediaPermissionRequest.h>
+ #include <WPE/WebKit/WKSoupSession.h>
++#include <wpe/wpe.h>
+ 
+ #include <glib.h>
+ 
+@@ -1042,7 +1043,7 @@
+             auto cookieManager = WKContextGetCookieManager(context);
+             WKCookieManagerSetCookiePersistentStorage(cookieManager, path, kWKCookieStorageTypeSQLite);
+ 
+-            _view = WKViewCreate(pageConfiguration);
++            _view = WKViewCreate(wpe_view_backend_create(), pageConfiguration);
+             if (_config.FPS.Value() == true) {
+                 _viewClient.base.clientInfo = static_cast<void*>(this);
+                 WKViewSetViewClient(_view, &_viewClient.base);
+diff -urN a/cmake/FindWPEWebKit.cmake b/cmake/FindWPEWebKit.cmake
+--- a/cmake/FindWPEWebKit.cmake
++++ b/cmake/FindWPEWebKit.cmake
+@@ -9,7 +9,7 @@
+ # So here we purposely left one underscore away
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(PC_WPE_WEBKIT wpe-webkit)
++pkg_check_modules(PC_WPE_WEBKIT wpe-webkit-deprecated-0.1)
+ 
+ if(PC_WPE_WEBKIT_FOUND)
+     if(WPE_WEBKIT_FIND_VERSION AND PC_WPE_WEBKIT_VERSION)
