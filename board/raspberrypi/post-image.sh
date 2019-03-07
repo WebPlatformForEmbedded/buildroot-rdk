@@ -6,18 +6,31 @@ BOARD_DIR="$(dirname $0)"
 BOARD_NAME="$(basename ${BOARD_DIR})"
 GENIMAGE_CFG="${BOARD_DIR}/genimage-${BOARD_NAME}.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
+BLUETOOTH="$(grep ^BR2_PACKAGE_BLUEZ5_UTILS=y ${BR2_CONFIG})"
 
 for arg in "$@"
 do
 	case "${arg}" in
 		--add-pi3-miniuart-bt-overlay)
-		if ! grep -qE '^dtoverlay=' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
-			echo "Adding 'dtoverlay=pi3-miniuart-bt' to config.txt (fixes ttyAMA0 serial console)."
-			cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
+		if [ "x${BLUETOOTH}" = "x" ]; then
+			if ! grep -qE '^dtoverlay=' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+				echo "Adding 'dtoverlay=pi3-miniuart-bt' to config.txt (fixes ttyAMA0 serial console)."
+				cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
 
 # fixes rpi3 ttyAMA0 serial console
 dtoverlay=pi3-miniuart-bt
 __EOF__
+			fi
+		else
+			echo "Adding serial console to /dev/ttyS0 to config.txt."
+			sed -i 's/ttyAMA0/ttyS0/g' "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
+			if ! grep -qE '^enable_uart=1' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+				cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
+
+# Fixes rpi3 ttyS0 serial console
+enable_uart=1
+__EOF__
+			fi
 		fi
 		;;
 		--aarch64)
