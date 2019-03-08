@@ -1,0 +1,53 @@
+From 571005afccc716b7b208e776cfcb19a48fa5772c Mon Sep 17 00:00:00 2001
+From: Carlos Garcia Campos <cgarcia@igalia.com>
+Date: Mon, 2 Jul 2018 07:40:52 +0200
+Subject: soup-cookie-jar: limit the cookie size too
+
+---
+ libsoup/soup-cookie-jar.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/libsoup/soup-cookie-jar.c b/libsoup/soup-cookie-jar.c
+index c11f1541..a287fb32 100644
+--- a/libsoup/soup-cookie-jar.c
++++ b/libsoup/soup-cookie-jar.c
+@@ -61,6 +61,8 @@ G_DEFINE_TYPE_WITH_CODE (SoupCookieJar, soup_cookie_jar, G_TYPE_OBJECT,
+ 			 G_IMPLEMENT_INTERFACE (SOUP_TYPE_SESSION_FEATURE,
+ 						soup_cookie_jar_session_feature_init))
+ 
++#define MAX_COOKIE_SIZE 102400 /* 100K */
++
+ static void
+ soup_cookie_jar_init (SoupCookieJar *jar)
+ {
+@@ -450,6 +452,15 @@ soup_cookie_jar_get_cookie_list (SoupCookieJar *jar, SoupURI *uri, gboolean for_
+ 	return get_cookies (jar, uri, for_http, TRUE);
+ }
+ 
++static unsigned cookie_size (SoupCookie *cookie)
++{
++	/* Consider name, value, domain and path only for the size */
++	return (cookie->name ? strlen(cookie->name) : 0) +
++		(cookie->value ? strlen(cookie->value) : 0) +
++		(cookie->domain ? strlen(cookie->domain) : 0) +
++		(cookie->path ? strlen(cookie->path) : 0);
++}
++
+ /**
+  * soup_cookie_jar_add_cookie:
+  * @jar: a #SoupCookieJar
+@@ -480,6 +491,11 @@ soup_cookie_jar_add_cookie (SoupCookieJar *jar, SoupCookie *cookie)
+ 		return;
+ 	}
+ 
++	if (cookie_size (cookie) > MAX_COOKIE_SIZE) {
++		g_warning ("Trying to add a cookie for domain '%s', bigger than maximum allowed size %d, ignoring it", cookie->domain, MAX_COOKIE_SIZE);
++		return;
++	}
++
+ 	priv = soup_cookie_jar_get_instance_private (jar);
+ 	old_cookies = g_hash_table_lookup (priv->domains, cookie->domain);
+ 	for (oc = old_cookies; oc; oc = oc->next) {
+-- 
+2.20.1
+
