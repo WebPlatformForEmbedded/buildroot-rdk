@@ -57,6 +57,7 @@ __EOF__
 			cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
 
 # hdmi mode 4=720p and 16=1080p
+hdmi_group=1
 ${hdmi_mode}
 __EOF__
 		else
