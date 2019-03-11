@@ -355,6 +355,22 @@ config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_GROUP
         run WebKitBrowser as this group, leave empty to use the same as 
         WPEframework
 
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_CLIENTIDENTIFIER
+    string "clientidentifier"
+    default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_THREADEDPAINTING
+    string "threaded-painting"
+    default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_LOCALSTORAGE
+    string "HTML5 local storage path"
+    default ""
+
+config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_COOKIESTORAGE
+    string "Cookie storage path"
+    default ""
+
 menuconfig BR2_PACKAGE_WPEFRAMEWORK_YOUTUBE
     depends on BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER
     bool "youtube"
@@ -404,22 +420,6 @@ config BR2_PACKAGE_WPEFRAMEWORK_UX_USERAGENT
     default ""
 
 endif
-
-config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_CLIENTIDENTIFIER
-    string "clientidentifier"
-    default ""
-
-config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_THREADEDPAINTING
-    string "threaded-painting"
-    default ""
-
-config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_LOCALSTORAGE
-	string "HTML5 local storage path"
-	default ""
-
-config BR2_PACKAGE_WPEFRAMEWORK_WEBKITBROWSER_COOKIESTORAGE
-	string "Cookie storage path"
-	default ""
 
 endif
 
