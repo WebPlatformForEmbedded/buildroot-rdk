@@ -173,11 +173,6 @@ config BR2_PACKAGE_WPEWEBKIT_USE_PUNCH_HOLE_GSTREAMER
 	help
 	  Use Gstreamer.
 
-config BR2_PACKAGE_WPEWEBKIT_USE_PUNCH_HOLE_EXTERNAL
-	bool "external"
-	help
-	  Use an external player.
-
 endchoice
 
 endif
