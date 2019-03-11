@@ -14,7 +14,6 @@ do
 		--add-pi3-miniuart-bt-overlay)
 		if [ "x${BLUETOOTH}" = "x" ]; then
 			if ! grep -qE '^dtoverlay=' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
-				echo "Adding 'dtoverlay=pi3-miniuart-bt' to config.txt (fixes ttyAMA0 serial console)."
 				cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
 
 # fixes rpi3 ttyAMA0 serial console
@@ -22,12 +21,11 @@ dtoverlay=pi3-miniuart-bt
 __EOF__
 			fi
 		else
-			echo "Adding serial console to /dev/ttyS0 to config.txt."
 			sed -i 's/ttyAMA0/ttyS0/g' "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
 			if ! grep -qE '^enable_uart=1' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
 				cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
 
-# Fixes rpi3 ttyS0 serial console
+# fixes rpi3 ttyS0 serial console
 enable_uart=1
 __EOF__
 			fi
@@ -53,10 +51,48 @@ enable_uart=1
 __EOF__
 		fi
 		;;
+	    --hdmi_mode=*)
+		hdmi_mode="${arg:2}"
+		if ! grep -qE '^hdmi_mode=' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+			cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
+
+# hdmi mode 4=720p and 16=1080p
+${hdmi_mode}
+__EOF__
+		else
+			sed -e "/^${hdmi_mode%=*}=/s,=.*,=${hdmi_mode##*=}," -i "${BINARIES_DIR}/rpi-firmware/config.txt"
+		fi
+		;;
 		--gpu_mem_256=*|--gpu_mem_512=*|--gpu_mem_1024=*)
 		# Set GPU memory
 		gpu_mem="${arg:2}"
 		sed -e "/^${gpu_mem%=*}=/s,=.*,=${gpu_mem##*=}," -i "${BINARIES_DIR}/rpi-firmware/config.txt"
+		;;
+		--overclock*)
+		if ! grep -qE '^arm_freq=' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+			cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
+
+# overclock
+[pi0]
+[pi0w]
+[pi1]
+[pi2]
+arm_freq=1000
+gpu_freq=500
+sdram_freq=500
+over_voltage=6
+[pi3]
+arm_freq=1350
+gpu_freq=500
+sdram_freq=500
+over_voltage=5
+[pi3+]
+arm_freq=1500
+gpu_freq=500
+sdram_freq=560
+over_voltage=5
+__EOF__
+		fi
 		;;
 	esac
 
