@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>WPE</title>
+<style>
+
+html, body {
+    background-color: #111;
+    background-image: url('data:image/png;base64,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');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; 
+    background-size: 30%;
+    color: #fff;
+    font-family: "Bitstream Vera Sans Mono";
+    margin: 0;
+}
+
+div#status {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 23%;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    font-size: 280%;
+    text-align: center;
+}
+
+div#interfaces {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 10%;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    font-size: 200%;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<div id="status">Hello</div>
+<div id="interfaces"></div>
+<script type="text/javascript">
+    (function (host, lan, wlan) {
+        var logoEl = document.getElementById('logo'),
+            statusEl = document.getElementById('status'),
+            interfacesEl = document.getElementById('interfaces'),
+            deviceId;
+        function delay(t, v) {
+           return new Promise((resolve) => {
+               setTimeout(resolve.bind(null, v), t)
+           });
+        }
+        function log(interfaces) {
+            return new Promise((resolve, reject) => {
+                var ip = '';
+                for (var i = 0; i < interfaces.length; i++)
+                    ip += `${interfaces[i].name}: ${interfaces[i].ip}<br/>`;
+                if (ip !== '') interfacesEl.innerHTML = ip;
+                resolve(interfaces);
+            });
+        }
+        function xhr(method, url, body) {
+            return new Promise((resolve, reject) => {
+                var http = new XMLHttpRequest();
+                http.onreadystatechange = (event) => {
+                    var req = event.target;
+                    if (req.readyState == 4) {
+                        if (req.status == 200) {
+                            try {
+                                resolve(method === 'GET' ? JSON.parse(req.responseText) : undefined);
+                            } catch(err) {
+                                reject(err);
+                            }
+                        } else {
+                            reject('XHR failed');
+                        }
+
+                    }
+                };
+                http.open(method || 'GET', url, true);
+                http.send(body);
+            });
+        }
+        function wpe(arr) {
+            return xhr(arr[0], `http://${host}/Service${arr[1]}`, arr[2]);
+        }
+        function interfaces() {
+            return new Promise((resolve, reject) => {
+                wpe(['GET', '/DeviceInfo'])
+                    .then((deviceInfo) => {
+                        var result = [];
+                        if (deviceInfo.systeminfo.deviceid)
+                            deviceId = deviceInfo.systeminfo.deviceid;
+                        if (!deviceInfo.addresses) return resolve(result);
+                        for (var i = 0; i < deviceInfo.addresses.length; i++) {
+                            if (Array.isArray(deviceInfo.addresses[i].ip) && deviceInfo.addresses[i].ip[0] !== '127.0.0.1')
+                                result.push({name: deviceInfo.addresses[i].name, ip: deviceInfo.addresses[i].ip});
+                        }
+                        resolve(result);
+                    });
+            });
+        }
+        function configUX() {
+            return xhr('GET', '/config.json');
+        }
+        function loadUX(config) {
+            return new Promise((resolve, reject) => {
+                var id = encodeURIComponent(deviceId);
+                xhr('GET', `${config.ux}${id}`)
+                    .then((result) => {
+                        if (result && result.url)
+                            wpe(['PUT', '/Controller/Activate/UX'])
+                                .then(wpe.bind(null, ['POST', '/UX/URL', `{"url":"${result.url}"}`]))
+                                .then(resolve)
+                                .catch(reject);
+                        else
+                            reject();
+                    })
+                    .catch(reject);
+            });
+        }
+        return new Promise((resolve, reject) => {
+            var joining = false;
+            var socket = new WebSocket(`ws://${host}/Service/Controller`, 'notification');
+            socket.onmessage = (msg) => {
+                var data;
+                try {
+                    data = msg && msg.data && JSON.parse(msg.data.replace(/\\x00/g, ''));
+                } catch(err) {
+                    // Silently fail
+                    console.error(msg.data, err);
+                    return;
+                }
+                console.log(data);
+                if (data.callsign === 'WifiControl' && data.state === 'activated' && !joining) {
+                    statusEl.innerHTML = 'Scanning WiFi';
+                    delay(1000).then(wpe.bind(null, ['PUT', '/WifiControl/Scan']));
+                }
+                if (data.callsign === 'WifiControl' && data.data && data.data.networks && !joining) {
+                    joining = true;
+                    var networks = {};
+                    for (var i = 0; i < data.data.networks.length; i++) {
+                        var network = data.data.networks[i];
+                        if (network.ssid && !networks[network.ssid])
+                            networks[network.ssid] = network;
+                    }
+                    console.log(networks);
+                }
+                if (data.callsign === 'NetworkControl' && data.data && data.data.interface) {
+                    if (data.data.ip) {
+                        if (data.data.interface === wlan) {
+                            joining = false;
+                        }
+                        interfaces().then(log);
+                    } else if (data.data.running) {
+                        statusEl.innerHTML = `Acquiring Network (${data.data.interface})`;
+                    } else if (data.data.status === 11) {
+                        // Ignore wlan DHCP failure when not in joining progress
+                        if (data.data.interface === wlan && !joining) return;
+                        delay(2000)
+                            .then(wpe.bind(null, ['PUT', `/NetworkControl/${data.data.interface}/Request`]))
+                            .catch(reject);
+                    }
+                }
+                if (data.callsign === 'UX' && data.data && data.data.url && data.data.loaded) {
+                    delay(5000).then(wpe.bind(null, ['PUT', '/Controller/Deactivate/WebKitBrowser']));
+                }
+                if (data.subsystems && data.subsystems.Internet) {
+                    statusEl.innerHTML = 'We&#39;re connected!';
+                }
+                if (data.subsystems && data.subsystems.Time) {
+                    statusEl.innerHTML = 'Internet is up!';
+                    configUX()
+                        .then((config) => {
+                            statusEl.innerHTML = 'Loading UX';
+                            loadUX(config).then(() => {
+                                logoEl.className = '';
+                                statusEl.innerHTML = 'We&#39;re ready!';
+                            })
+                            .catch((err) => {
+                                statusEl.innerHTML = 'Something went wrong (' + deviceId + ')';
+                            });
+                        })
+                        .catch((err) => {
+                                statusEl.innerHTML = 'We&#39;re ready!';
+                        });
+                }
+            };
+            socket.onopen = () => {
+                interfaces().then(log);
+            };
+            socket.onerror = (err) => {
+                reject(err);
+            };
+            socket.onclose = () => {
+                reject('Connection lost');
+            };
+        });
+    }(location.hostname, 'eth0', 'wlan0')).catch(console.error);
+</script>
+</body>
+</html>
