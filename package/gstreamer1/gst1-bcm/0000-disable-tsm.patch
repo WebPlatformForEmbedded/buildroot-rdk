@@ -1,0 +1,21 @@
+From 97111f84d53e636103465cc7de4e5a1f391164f7 Mon Sep 17 00:00:00 2001
+From: Bram Oosterhuis <bram.oosterhuis.nl@gmail.com>
+Date: Wed, 6 Mar 2019 09:17:28 +0100
+Subject: [PATCH] Disable tsm in video decoder for 1080p60
+
+---
+ videodecode/src/gst_brcm_video_decoder.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/videodecode/src/gst_brcm_video_decoder.c b/videodecode/src/gst_brcm_video_decoder.c
+index b66edd8..16f2b62 100755
+--- a/videodecode/src/gst_brcm_video_decoder.c
++++ b/videodecode/src/gst_brcm_video_decoder.c
+@@ -1407,6 +1407,7 @@ static NEXUS_Error gst_brcm_video_decoder_start_locked(GstBrcmVideoDecoder *deco
+ 
+     NEXUS_SimpleVideoDecoder_GetTrickState(decoder->video_decoder, &ts);
+     ts.rate = NEXUS_NORMAL_DECODE_RATE;
++    ts.tsmEnabled = NEXUS_TsmMode_eDisabled;
+     NEXUS_SimpleVideoDecoder_SetTrickState(decoder->video_decoder, &ts);
+ 
+     decoder->nexus_decoder_started = TRUE;
