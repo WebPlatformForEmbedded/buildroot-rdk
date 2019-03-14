@@ -1,0 +1,72 @@
+diff -urN a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_backflow.c b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_backflow.c
+--- a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_backflow.c
++++ b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_backflow.c
+@@ -320,7 +320,7 @@
+ 
+ static Backflow *tr_tan(Backflow *angle)
+ {
+-   return fdiv(tr_sin(angle), tr_cos(angle));
++   return backflow_fdiv(tr_sin(angle), tr_cos(angle));
+ }
+ 
+ /*
+@@ -393,7 +393,7 @@
+          unsigned_div_rem(&div, &rem, l, r);
+          return div;
+       case DF_FLOAT:
+-         return fdiv(l, r);
++         return backflow_fdiv(l, r);
+       default:
+          unreachable();
+          return NULL;
+diff -urN a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_qbe_fragment_adv_blend.c b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_qbe_fragment_adv_blend.c
+--- a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_qbe_fragment_adv_blend.c
++++ b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_qbe_fragment_adv_blend.c
+@@ -22,7 +22,7 @@
+ static Backflow *tr_blend_div(Backflow *n, Backflow *d)
+ {
+    Backflow *eq0 = tr_uop_push(V3D_QPU_OP_FMOV, SETF_PUSHZ, n);
+-   return tr_cond(eq0, n /* 0 */, fdiv(n, d), false);
++   return tr_cond(eq0, n /* 0 */, backflow_fdiv(n, d), false);
+ }
+ 
+ static void adv_blend_copy_rgb(Backflow *rgb[3], Backflow *rgba[4])
+@@ -91,7 +91,7 @@
+    // 0                            , if Cd <= 0
+    // min(AsAd, AsAsCd / (As - Cs)), if Cd > 0 && Cs < As
+    // AsAd                         , if Cd > 0 && Cs >= As
+-   Backflow *expr = fdiv(mul(mul(as, as), cd), sub(as, cs));
++   Backflow *expr = backflow_fdiv(mul(mul(as, as), cd), sub(as, cs));
+ 
+    Backflow *cd_lte0 = tr_uop_push(V3D_QPU_OP_FMOV, SETF_PUSHC, cd);
+    Backflow *cs_gte1 = tr_binop_push(V3D_QPU_OP_FCMP, SETF_PUSHC, as, cs);
+@@ -105,7 +105,7 @@
+    // AsAd                                , if Cd >= Ad
+    // AsAd - min(AsAd, AsAs(Ad - Cd) / Cs), if Cd < Ad && Cs > 0
+    // 0                                   , if Cd < Ad && Cs <= 0
+-   Backflow *expr = fdiv(mul(mul(as, as), sub(ad, cd)), cs);
++   Backflow *expr = backflow_fdiv(mul(mul(as, as), sub(ad, cd)), cs);
+ 
+    Backflow *cd_gte1 = tr_binop_push(V3D_QPU_OP_FCMP, SETF_PUSHC, ad, cd);
+    Backflow *cs_lte0 = tr_uop_push(V3D_QPU_OP_FMOV, SETF_PUSHC, cs);
+@@ -257,7 +257,7 @@
+    Backflow *color[3];
+ 
+    Backflow *sbase_gt0 = tr_binop_push(V3D_QPU_OP_FCMP, SETF_PUSHN, tr_cfloat(0.0f), sbase);
+-   Backflow *ssat_over_sbase = tr_cond(sbase_gt0, fdiv(ssat, sbase), tr_cfloat(0.0f), false);
++   Backflow *ssat_over_sbase = tr_cond(sbase_gt0, backflow_fdiv(ssat, sbase), tr_cfloat(0.0f), false);
+ 
+    for (uint32_t i = 0; i < 3; ++i)
+       color[i] = mul(sub(cbase[i], minbase), ssat_over_sbase);
+diff -urN a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_sched_node_helpers.h b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_sched_node_helpers.h
+--- a/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_sched_node_helpers.h
++++ b/BSEAV/lib/gpu/vc5/driver/libs/khrn/glsl/glsl_sched_node_helpers.h
+@@ -147,7 +147,7 @@
+ #endif
+ }
+ 
+-static inline Backflow *fdiv(Backflow *a, Backflow *b) { return mul(a, recip(b)); }
++static inline Backflow *backflow_fdiv(Backflow *a, Backflow *b) { return mul(a, recip(b)); }
+ 
+ /* Used by glsl_scheduler_4.c */
+ static inline Backflow *glsl_backflow_thrsw(void) { return create_node(SPECIAL_THRSW); }

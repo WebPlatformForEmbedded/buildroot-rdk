@@ -395,6 +395,7 @@ endmenu
 	source "package/amd-catalyst/Config.in"
 	source "package/avrdude/Config.in"
 	source "package/bcache-tools/Config.in"
+	source "package/bcm-refsw/Config.in"
 	source "package/biosdevname/Config.in"
 	source "package/brltty/Config.in"
 	source "package/cbootimage/Config.in"
