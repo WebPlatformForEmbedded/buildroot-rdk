@@ -25,6 +25,12 @@ config BR2_PACKAGE_ICU_CUSTOM_DATA_PATH
 	  provided by buildroot.
 	  Leave empty to not use this functionality.
 
+config BR2_PACKAGE_ICU_USE_ICUDATA
+	bool "Use icudata"
+	select BR2_PACKAGE_ICUDATA
+	help
+	  This option will build a minimal icudata.
+
 endif
 
 comment "icu needs a toolchain w/ C++, wchar, threads, gcc >= 4.8, host gcc >= 4.8"
